@@ -21,6 +21,6 @@ This repository contains code and resources for predicting stock prices using ma
 Clone the repository and install the required Python packages:
 
 ```bash
-git clone https://github.com/yourusername/Stock_Price_Prediction.git
+git clone https://github.com/Equone/MarketProject.git
 cd Stock_Price_Prediction
 pip install -r requirements.txt
