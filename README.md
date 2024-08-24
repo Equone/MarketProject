@@ -22,5 +22,5 @@ Clone the repository and install the required Python packages:
 
 ```bash
 git clone https://github.com/Equone/MarketProject.git
-cd Stock_Price_Prediction
+cd MarketProject
 pip install -r requirements.txt
