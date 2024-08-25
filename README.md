@@ -233,3 +233,50 @@ predictors = ["Actual_Close", "Volume", "Open", "High", "Low", "weekly_mean",
                 "weekly_trend","monthly_trend","annual_trend","div_trend",
                 "elections_trend"]
 ```
+We will see how it impacts the training : their nature, their number..
+
+## An important point : Backtesting
+
+```python
+# Backtesting to improve our model
+
+def back_test(data, model, predictors, start = 1000, step = 400):
+    # A model is trained every "step" rows
+    
+    predictions = []
+    
+    for i in range(1000, data.shape[0], step):
+        
+        train = data.iloc[0:i].copy()
+        test = data.iloc[i:(i+step)].copy()
+        model.fit(train[predictors], train["Target"])
+        preds = model.predict_proba(test[predictors])[:,1] # Allow us to have values between 0 and 1 instead of 0/1
+        preds = pd.Series(preds, index=test.index)
+        
+        preds[preds > .6] = 1 # We put the treshold here at 0.6, so it predicts it will go up with more confidence
+        preds[preds<=.6] = 0
+        
+        combined = pd.concat({"Target": test["Target"], "Predictions": preds}, axis=1)
+        
+        predictions.append(combined)
+
+    return pd.concat(predictions)
+```
+
+Backtesting is a technique used primarily in finance and machine learning to assess the performance of a predictive model or trading strategy over a historical dataset. The idea is to simulate how the model or strategy would have performed in the past, given the historical data, and use that performance as a proxy for how it might perform in the future.
+
+In the context of machine learning, backtesting involves retraining a model multiple times on different subsets of data to evaluate how the model would have performed in a real-world scenario, where data arrives sequentially over time. This approach is especially useful for time series data, where the order of data points matters, and traditional cross-validation might not be appropriate.
+
+## Model Initialization
+
+```python
+# Initialize models
+models = {
+    "Random Forest": RandomForestClassifier(n_estimators=100, min_samples_split=200, random_state=1),
+    "Logistic Regression": LogisticRegression(),
+    "SVM": SVC(probability=True),  
+    "KNN": KNeighborsClassifier(),
+    "Gradient Boosting": GradientBoostingClassifier()
+}
+```
+This is the different models we will be using. Each comes with different pros and cons. We will talk about those in the **Results** section.
