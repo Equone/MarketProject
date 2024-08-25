@@ -279,4 +279,129 @@ models = {
     "Gradient Boosting": GradientBoostingClassifier()
 }
 ```
-This is the different models we will be using. Each comes with different pros and cons. We will talk about those in the **Results** section.
+This is the different models we will be using. Each comes with different pros and cons. We will talk about those in the **Results** section. We use a _dictionnary_ to simplify the code.
+
+## Without BackTesting :
+
+This section trains the models on a static train/test split and evaluates their performance; results will be discussed in the next part.
+
+```python
+# 1. Without Backtesting: Evaluate on static split
+
+train = data.iloc[:-100] 
+test = data.iloc[-100:] 
+
+print("\nWithout Backtesting:")
+precision_scores = []
+recall_scores = []
+f1_scores = []
+roc_auc_scores = []
+model_names = []
+
+for model_name, model in models.items():
+    # Train the model on the training data
+    model.fit(train[predictors], train["Target"])
+    
+    # Predict on the test data
+    preds = model.predict(test[predictors])
+    preds_proba = model.predict_proba(test[predictors])[:, 1]
+    
+    # Create a DataFrame for easier manipulation and plotting
+    results = pd.DataFrame({
+        "Target": test["Target"],
+        "Predictions": preds,
+        "Prediction_Probabilities": preds_proba
+    }, index=test.index)
+    
+    # Select the last 100 days of the results
+    last_100_days_predictions = results.iloc[-100:]
+    
+    # Calculate performance metrics for the last 100 days
+    precision_last_100 = precision_score(last_100_days_predictions["Target"], last_100_days_predictions["Predictions"])
+    recall_last_100 = recall_score(last_100_days_predictions["Target"], last_100_days_predictions["Predictions"])
+    f1_last_100 = f1_score(last_100_days_predictions["Target"], last_100_days_predictions["Predictions"])
+    roc_auc_last_100 = roc_auc_score(last_100_days_predictions["Target"], last_100_days_predictions["Prediction_Probabilities"])
+    
+    print(f"\nPerformance metrics for {model_name} on the last 100 days (W\out BT):")
+    print(f"Precision: {precision_last_100:.4f}")
+    print(f"Recall: {recall_last_100:.4f}")
+    print(f"F1-Score: {f1_last_100:.4f}")
+    print(f"ROC-AUC Score: {roc_auc_last_100:.4f}")
+
+    # Plot target vs predictions for the last 100 days
+    plt.figure(figsize=(10, 6))
+    plt.plot(last_100_days_predictions.index, last_100_days_predictions["Target"], label="Actual Target", color="blue", marker="o")
+    plt.plot(last_100_days_predictions.index, last_100_days_predictions["Predictions"], label="Predicted", color="red", marker="x")
+    plt.title(f"{model_name} - Target vs Predictions (Last 100 Days, W\out BT)")
+    plt.xlabel("Date")
+    plt.ylabel("Target")
+    plt.legend()
+    plt.show()
+    
+    precision = precision_score(test["Target"], preds)
+    recall = recall_score(test["Target"], preds)
+    f1 = f1_score(test["Target"], preds)
+    roc_auc = roc_auc_score(test["Target"], preds_proba)
+    
+    precision_scores.append(precision)
+    recall_scores.append(recall)
+    f1_scores.append(f1)
+    roc_auc_scores.append(roc_auc)
+    model_names.append(model_name)
+    
+    print(f"\nPerformance metrics for {model_name}:")
+    print(f"Precision: {precision:.4f}")
+    print(f"Recall: {recall:.4f}")
+    print(f"F1-Score: {f1:.4f}")
+    print(f"ROC-AUC Score: {roc_auc:.4f}")
+    
+    # Compute ROC curve and ROC area
+    fpr, tpr, _ = roc_curve(test["Target"], preds_proba)
+    plt.plot(fpr, tpr, label=f'{model_name} (ROC-AUC = {roc_auc:.2f})')
+    
+
+# Plot diagonal line for reference (no skill classifier)
+plt.plot([0, 1], [0, 1], color='navy', linestyle='--')
+
+# Adding labels and title
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve - without Backtesting')
+plt.legend(loc="lower right")
+
+# Show the plot
+plt.show()
+```
+
+To add the Backtesting function, we just need to modify this :
+```python
+predictions = back_test(data.iloc[365:], model, predictors)
+```
+and the rest does not change.
+
+
+# Results
+In this part, we look at the different results we have from the company Apple (symbol: `AAPL`), the _25 august 2024_.
+
+_If you need explanations about the metrics and notions that are used in this part, they are well detailled in this article :_ https://towardsdatascience.com/a-look-at-precision-recall-and-f1-score-36b5fd0dd3ec
+
+## All metrics
+Here are the results I had from my tests :
+
+### _Without BackTesting :_
+![AAPL_NoBackTesting](https://github.com/user-attachments/assets/38168921-d62a-4447-90df-ed9c0863d8d2)
+
+### _With BackTesting :_
+![AAPL_NoBackTesting](https://github.com/user-attachments/assets/65a5f26b-bab1-40b2-8593-2d8acd305194)
+
+This table sum up the impact of the addition of BackTesting on our models.
+
+|Model \ Metric| Precision  | Recall | F1-Score | ROC-AUC |
+| ------------- | ------------- |  ------------- |  ------------- |  ------------- |
+|Gradient Boosting  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
+| KNN  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
+| SVM  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
+| Logisitic Regression  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
+| Random Forest  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
