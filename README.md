@@ -2,7 +2,7 @@
 
 This repository contains code and resources for predicting stock prices using machine learning models. The project explores various models and techniques, with a focus on backtesting and feature engineering. We will see the different machine learning models, their limits and the different ways of measuring the performances of a trained model.
 
-_NB: I know there is no algorithm that can predict the future; and it would not be as simple as this. This project is only for an education purposes only.
+_NB: I know there is no algorithm that can predict the future (and it would not be as simple as this). This project is for education purposes only.
 This project was inspired by an article on dataset (I will update this README.md for the credits)._
 
 ## Project Overview
