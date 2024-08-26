@@ -400,8 +400,29 @@ This table sum up the impact of the addition of BackTesting on our models.
 
 |Model \ Metric| Precision  | Recall | F1-Score | ROC-AUC |
 | ------------- | ------------- |  ------------- |  ------------- |  ------------- |
-|Gradient Boosting  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
-| KNN  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
-| SVM  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
-| Logisitic Regression  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
-| Random Forest  | Content Cell  | Content Cell  | Content Cell  | Content Cell  |
+|Gradient Boosting  | **Increase**  | **Increase**  | **Increase**  | **Increase**  |
+| KNN  | _Decrease_  | _Decrease_  | _Decrease_  | _Decrease_  |
+| SVM  | N/A  | N/A  | N/A  | _Decrease_  |
+| Logisitic Regression  | **Increase**  | _Decrease_  | _Decrease_  | Constant  |
+| Random Forest  | Constant  | **Increase**  | **Increase**  | **Increase**  |
+
+Looking at the impact of the introduction of Backtesting on metrics tells us how our models react to more dynamic data. As an example, the KNN model is taking a huge hit, while Random Forest takes a lot of profits from it. 
+
+It is **relevant** to look at the impact of BackTesting, as in some fields - like finances - data are very variable.
+
+Additionnaly, we can look at this graph, which shows the ratio between _True Positive Rate_ and _False Positive Rate_ (without BackTesting here):
+
+![all](https://github.com/user-attachments/assets/70d7ab0e-a7a6-4806-a781-62d28923286e)
+
+As the table already suggered, **Random Forest** and **Gradient Boosting** are strong at this task; while **Logistic Regression** or **SVM** perform weaker, which may show that they are not well-suited for this time-series prediction task.
+
+## Tests of the models on the last 100 days
+
+Once the models are trained, we apply them on the last 100 days in order to see how good they are, and how many trades we would have made in this period.
+
+__NB: the code is for the last 100 days, but any times can be chosen. If you want to target specific dates that correspond to an event, just find the right index and avoind training your model during this period.
+
+# Limits
+
+## Overfitting
+
