@@ -420,9 +420,86 @@ As the table already suggered, **Random Forest** and **Gradient Boosting** are s
 
 Once the models are trained, we apply them on the last 100 days in order to see how good they are, and how many trades we would have made in this period.
 
-__NB: the code is for the last 100 days, but any times can be chosen. If you want to target specific dates that correspond to an event, just find the right index and avoind training your model during this period.
+__NB: the code is for the last 100 days, but any times can be chosen. If you want to target specific dates that correspond to an event, just find the right index and avoind training your model during this period. Furthermore, every graph can be created with the code, I only took some to write this README.
 
-# Limits
+For every model, we plot the _Target_ and the _Prediction_ by the date, in order to know if we were right or not.
+Let's take some **relevant** examples, so we can see some limits of machine learning.
 
-## Overfitting
+### Models not adapted for the data
+
+**Logistic Regression**, without BackTesting :
+
+![Figure 2024-08-27 121835 (1)](https://github.com/user-attachments/assets/943ac09a-d516-44e7-b224-7d143105cbbd)
+
+**SVM**, without BackTesting :
+
+![Figure 2024-08-27 121835 (2)](https://github.com/user-attachments/assets/b214381f-cd8a-4292-9be8-7f46897bf84b)
+
+As we can see, it is quite polarized. For **Logistic Regression**, we would have made **100** trades for a global precision of _.65_ - which does not mean profit, as we do not consider the ratio `open\close`.
+
+Obvisouly, this would not be a good strategy at all and therefore, this kind of model for this data and without BackTesting, is not viable nor reliable.
+
+### Models adapted for the data
+
+**Gradient Boosting**, without BackTesting :
+
+![Figure 2024-08-27 121835 (3)](https://github.com/user-attachments/assets/c161e260-d079-4e1c-810c-95c14dea08c5)
+
+**KNN**, without BackTesting :
+
+![Figure 2024-08-27 121835 (3)](https://github.com/user-attachments/assets/7fdb736c-acc1-4793-8b2a-46c2bc4f8a0a)
+
+Respectively, with **Gradient Boosting** and **KNN** we would have made **11** and **47** trades. However, metrics are quite different :
+
+|Model \ Metric| Precision  | Recall | F1-Score | ROC-AUC |
+| ------------- | ------------- |  ------------- |  ------------- |  ------------- |
+|Gradient Boosting  | 0.6364 | 0.1077 | 0.1842 | 0.6055 |
+| KNN  | 0.6981 | 0.5692 | 0.6271 | 0.5622 |
+
+This correspond to two different strategies : a "_safe_" one, and a more "_aggressive_" one, depending on how we want to approach our investments and how much risks we are willing to take. However, **KNN** metrics are still relatively high compared to its rival.
+
+You can still play on different approachs, parameters to see how models react, etc. I just put some examples here as a sample, we can do much more in-depth analysis with this.
+
+## Limits
+
+### Overfitting
+
+The reason why the models before were without BackTesting is : the addition of BackTesting + many many criterias may lead to overfitting.
+
+Here is a clear example : 
+
+**Random Forest**, with BackTesting :
+
+![Figure 2024-08-27 121835 (5)](https://github.com/user-attachments/assets/319cb744-6c97-4a1a-a94b-10254bcbefa8)
+
+Overfitting means the model learnt _too much_ the data -  not only the underlying patterns in the training data but also the noise and random fluctuations - this can lead to several issues:
+
+1. Poor generalization : weak perfomances on new (unseen) data.
+2. High variance : this is linked to the point before; often we want things to be as stable as possible.
+3. Loss of robustness : undesired patterns can be reproduced on new data.
+4. Misleading Metrics : a lack of vigilance on this phenomenon can be enhanced by the fact that metrics are good in this case.
+
+Nevertheless, solutions exist : More data, early stopping, simplification of the model (like removing some criterias),...
+
+If you want to see different behaviours, feel free to play with criterias, BackTesting parameters, etc.
+
+## Possible improvements
+
+Of course, some criterias may be added or changed. Furthermore, we could add a feature that tells us how much we would have won if trusting a model. Also, removing some parts of the training data could be an idea to reduces thz variance.
+
+# Conclusion
+
+Through this project, we saw the process of training different machine learning model on stock prices, the impact of implementing features like BackTesting and some of their limitations (overfitting).
+
+***Keys points were :***
+- **Importance of criterias**, as it plays a crucial role in the performance of the models.
+- **Role of BackTesting**, which is essential for evaluating a model's ability to generalize to unseen data.
+- **Model comparison**
+- **Understanding Overfitting** and its implications
+- **Using various techniques to get informations / data :** Webscrapping, API, specific librairies
+
+***Final Thoughts:***
+Predicting stock prices is a complex and uncertain task, as financial markets are influenced by a wide range of factors, many of which are impossible to quantify. While machine learning offers powerful tools for analyzing historical data and making predictions, it is important to approach such tasks with caution and recognize the limitations of these models.
+
+This project has no real financial value; it is here to give me an idea of the process of data preparation, feature engineering, model training, and evaluation, providing a foundation for further exploration and experimentation in the field of financial modeling. And as we say in France, for legal reasons : "_Les performances passées ne préjugent pas des performances futures_"
 
