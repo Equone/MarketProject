@@ -285,6 +285,71 @@ This is the different models we will be using. Each comes with different pros an
 
 This section trains the models on a static train/test split and evaluates their performance; results will be discussed in the next part.
 
+The following code train all models,test them on the wanted period and print all the metrics :
+
+```python
+# 1. Without Backtesting: Evaluate on static split
+
+train = data.iloc[:-100] 
+test = data.iloc[-100:] 
+
+# Define your custom interval
+a, b = 0, 100  # Example values, can be adjusted
+
+print(f"\nWithout Backtesting: Performance on Interval [{a}, {b}]")
+precision_scores = []
+recall_scores = []
+f1_scores = []
+roc_auc_scores = []
+model_names = []
+
+for model_name, model in models.items():
+    # Train the model on the training data
+    model.fit(train[predictors], train["Target"])
+    
+    # Predict on the test data
+    preds = model.predict(test[predictors])
+    preds_proba = model.predict_proba(test[predictors])[:, 1]
+    
+    # Create a DataFrame for easier manipulation and plotting
+    results = pd.DataFrame({
+        "Target": test["Target"],
+        "Predictions": preds,
+        "Prediction_Probabilities": preds_proba
+    }, index=test.index)
+    
+    # Select the custom interval [a, b] from the results
+    interval_predictions = results.iloc[a:b]
+    
+    # Calculate performance metrics for the selected interval
+    precision_interval = precision_score(interval_predictions["Target"], interval_predictions["Predictions"])
+    recall_interval = recall_score(interval_predictions["Target"], interval_predictions["Predictions"])
+    f1_interval = f1_score(interval_predictions["Target"], interval_predictions["Predictions"])
+    roc_auc_interval = roc_auc_score(interval_predictions["Target"], interval_predictions["Prediction_Probabilities"])
+    
+    print(f"\nPerformance metrics for {model_name} on the interval [{a}, {b}] (Without Backtesting):")
+    print(f"Precision: {precision_interval:.4f}")
+    print(f"Recall: {recall_interval:.4f}")
+    print(f"F1-Score: {f1_interval:.4f}")
+    print(f"ROC-AUC Score: {roc_auc_interval:.4f}")
+    
+    # Count the number of trades (predictions)
+    trades = interval_predictions["Predictions"].value_counts()
+    print(f"Number of trades for {model_name} on interval [{a}, {b}]:\n{trades}")
+
+    # Plot target vs predictions for the interval
+    plt.figure(figsize=(10, 6))
+    plt.plot(interval_predictions.index, interval_predictions["Target"], label="Actual Target", color="blue", marker="o")
+    plt.plot(interval_predictions.index, interval_predictions["Predictions"], label="Predicted", color="red", marker="x")
+    plt.title(f"{model_name} - Target vs Predictions (Interval [{a}, {b}], Without Backtesting)")
+    plt.xlabel("Date")
+    plt.ylabel("Target")
+    plt.legend()
+    plt.show()
+```
+
+And to see all the metrics with a better look :
+
 ```python
 # 1. Without Backtesting: Evaluate on static split
 
@@ -312,31 +377,6 @@ for model_name, model in models.items():
         "Predictions": preds,
         "Prediction_Probabilities": preds_proba
     }, index=test.index)
-    
-    # Select the last 100 days of the results
-    last_100_days_predictions = results.iloc[-100:]
-    
-    # Calculate performance metrics for the last 100 days
-    precision_last_100 = precision_score(last_100_days_predictions["Target"], last_100_days_predictions["Predictions"])
-    recall_last_100 = recall_score(last_100_days_predictions["Target"], last_100_days_predictions["Predictions"])
-    f1_last_100 = f1_score(last_100_days_predictions["Target"], last_100_days_predictions["Predictions"])
-    roc_auc_last_100 = roc_auc_score(last_100_days_predictions["Target"], last_100_days_predictions["Prediction_Probabilities"])
-    
-    print(f"\nPerformance metrics for {model_name} on the last 100 days (W\out BT):")
-    print(f"Precision: {precision_last_100:.4f}")
-    print(f"Recall: {recall_last_100:.4f}")
-    print(f"F1-Score: {f1_last_100:.4f}")
-    print(f"ROC-AUC Score: {roc_auc_last_100:.4f}")
-
-    # Plot target vs predictions for the last 100 days
-    plt.figure(figsize=(10, 6))
-    plt.plot(last_100_days_predictions.index, last_100_days_predictions["Target"], label="Actual Target", color="blue", marker="o")
-    plt.plot(last_100_days_predictions.index, last_100_days_predictions["Predictions"], label="Predicted", color="red", marker="x")
-    plt.title(f"{model_name} - Target vs Predictions (Last 100 Days, W\out BT)")
-    plt.xlabel("Date")
-    plt.ylabel("Target")
-    plt.legend()
-    plt.show()
     
     precision = precision_score(test["Target"], preds)
     recall = recall_score(test["Target"], preds)
@@ -373,6 +413,28 @@ plt.legend(loc="lower right")
 
 # Show the plot
 plt.show()
+
+
+# Plotting the metrics for static split (without backtesting)
+plt.figure(figsize=(12, 8))
+plt.subplot(2, 2, 1)
+plt.barh(model_names, precision_scores, color='blue')
+plt.title('Precision (Without Backtesting)')
+
+plt.subplot(2, 2, 2)
+plt.barh(model_names, recall_scores, color='green')
+plt.title('Recall (Without Backtesting)')
+
+plt.subplot(2, 2, 3)
+plt.barh(model_names, f1_scores, color='red')
+plt.title('F1-Score (Without Backtesting)')
+
+plt.subplot(2, 2, 4)
+plt.barh(model_names, roc_auc_scores, color='purple')
+plt.title('ROC-AUC (Without Backtesting)')
+
+plt.tight_layout()
+plt.show()
 ```
 
 To add the Backtesting function, we just need to modify this :
@@ -380,7 +442,6 @@ To add the Backtesting function, we just need to modify this :
 predictions = back_test(data.iloc[365:], model, predictors)
 ```
 and the rest does not change.
-
 
 # Results
 In this part, we look at the different results we have from the company Apple (symbol: `AAPL`), the _25 august 2024_.
