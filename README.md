@@ -504,7 +504,7 @@ Obviously, this would not be a good strategy at all and therefore, this kind of 
 
 **Gradient Boosting**, without BackTesting :
 
-![Figure 2024-08-27 121835 (3)](https://github.com/user-attachments/assets/c161e260-d079-4e1c-810c-95c14dea08c5)
+![Figure (4)](https://github.com/user-attachments/assets/f4235467-10c3-4b86-a5c6-c8c2949e5ff6)
 
 **KNN**, without BackTesting :
 
