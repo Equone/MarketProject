@@ -533,6 +533,11 @@ Here is a clear example :
 
 ![Figure 2024-08-27 121835 (5)](https://github.com/user-attachments/assets/319cb744-6c97-4a1a-a94b-10254bcbefa8)
 
+with really (really) high metrics :
+
+![image](https://github.com/user-attachments/assets/f9f10586-7695-4d82-91bd-508ae133543c)
+
+
 Overfitting means the model learned _too much_ the data -  not only the underlying patterns in the training data but also the noise and random fluctuations - this can lead to several issues:
 
 1. Poor generalization : weak perfomances on new (unseen) data.
