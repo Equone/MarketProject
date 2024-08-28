@@ -1,9 +1,9 @@
 # Market Project
 
-This repository contains code and resources for predicting stock prices using machine learning models. The project explores various models and techniques, with a focus on backtesting and feature engineering. We will see the different machine learning models, their limits and the different ways of measuring the performances of a trained model.
+This repository contains code and resources for predicting stock prices using machine learning models. The project explores various models and techniques, with a focus on backtesting and feature engineering. We will explore different machine learning models, their limitations, and various ways of measuring the performance of a trained model.
 
 _NB: I know there is no algorithm that can predict the future (and it would not be as simple as this). This project is for education purposes only.
-This project was inspired by an article on dataset (I will update this README.md for the credits)._
+This project was inspired by an article (I will update this README.md for the credits)._
 
 ## Project Overview
 
@@ -263,7 +263,7 @@ def back_test(data, model, predictors, start = 1000, step = 400):
     return pd.concat(predictions)
 ```
 
-Backtesting is a technique used primarily in finance and machine learning to assess the performance of a predictive model or trading strategy over a historical dataset. The idea is to simulate how the model or strategy would have performed in the past, given the historical data, and use that performance as a proxy for how it might perform in the future.
+Backtesting simulates how a predictive model or trading strategy would have performed on historical data, providing insight into its potential future performance.
 
 In the context of machine learning, backtesting involves retraining a model multiple times on different subsets of data to evaluate how the model would have performed in a real-world scenario, where data arrives sequentially over time. This approach is especially useful for time series data, where the order of data points matters, and traditional cross-validation might not be appropriate.
 
@@ -388,7 +388,7 @@ In this part, we look at the different results we have from the company Apple (s
 _If you need explanations about the metrics and notions that are used in this part, they are well detailled in this article :_ https://towardsdatascience.com/a-look-at-precision-recall-and-f1-score-36b5fd0dd3ec
 
 ## All metrics
-Here are the results I had from my tests :
+Here are the results I obtained from my tests :
 
 ### _Without BackTesting :_
 ![AAPL_NoBackTesting](https://github.com/user-attachments/assets/38168921-d62a-4447-90df-ed9c0863d8d2)
@@ -396,7 +396,7 @@ Here are the results I had from my tests :
 ### _With BackTesting :_
 ![AAPL_NoBackTesting](https://github.com/user-attachments/assets/65a5f26b-bab1-40b2-8593-2d8acd305194)
 
-This table sum up the impact of the addition of BackTesting on our models.
+This table sums up the impact of the addition of BackTesting on our models.
 
 |Model \ Metric| Precision  | Recall | F1-Score | ROC-AUC |
 | ------------- | ------------- |  ------------- |  ------------- |  ------------- |
@@ -414,13 +414,13 @@ Additionnaly, we can look at this graph, which shows the ratio between _True Pos
 
 ![all](https://github.com/user-attachments/assets/70d7ab0e-a7a6-4806-a781-62d28923286e)
 
-As the table already suggered, **Random Forest** and **Gradient Boosting** are strong at this task; while **Logistic Regression** or **SVM** perform weaker, which may show that they are not well-suited for this time-series prediction task.
+As the table already suggested, **Random Forest** and **Gradient Boosting** are strong at this task; while **Logistic Regression** or **SVM** perform weaker, which may show that they are not well-suited for this time-series prediction task.
 
 ## Tests of the models on the last 100 days
 
 Once the models are trained, we apply them on the last 100 days in order to see how good they are, and how many trades we would have made in this period.
 
-__NB: the code is for the last 100 days, but any times can be chosen. If you want to target specific dates that correspond to an event, just find the right index and avoind training your model during this period. Furthermore, every graph can be created with the code, I only took some to write this README.
+__NB: While the code analyzes the last 100 days, you can adjust this timeframe. To focus on specific event dates, locate the appropriate index and exclude that period from model training. Furthermore, every graph can be created with the code, I only took some to write this README.
 
 For every model, we plot the _Target_ and the _Prediction_ by the date, in order to know if we were right or not.
 Let's take some **relevant** examples, so we can see some limits of machine learning.
@@ -437,7 +437,7 @@ Let's take some **relevant** examples, so we can see some limits of machine lear
 
 As we can see, it is quite polarized. For **Logistic Regression**, we would have made **100** trades for a global precision of _.65_ - which does not mean profit, as we do not consider the ratio `open\close`.
 
-Obvisouly, this would not be a good strategy at all and therefore, this kind of model for this data and without BackTesting, is not viable nor reliable.
+Obviously, this would not be a good strategy at all and therefore, this kind of model for this data and without BackTesting, is not viable nor reliable.
 
 ### Models adapted for the data
 
@@ -464,7 +464,7 @@ You can still play on different approachs, parameters to see how models react, e
 
 ### Overfitting
 
-The reason why the models before were without BackTesting is : the addition of BackTesting + many many criterias may lead to overfitting.
+The reason why the models above were without BackTesting is : the addition of BackTesting + many many criterias may lead to overfitting.
 
 Here is a clear example : 
 
@@ -472,7 +472,7 @@ Here is a clear example :
 
 ![Figure 2024-08-27 121835 (5)](https://github.com/user-attachments/assets/319cb744-6c97-4a1a-a94b-10254bcbefa8)
 
-Overfitting means the model learnt _too much_ the data -  not only the underlying patterns in the training data but also the noise and random fluctuations - this can lead to several issues:
+Overfitting means the model learned _too much_ the data -  not only the underlying patterns in the training data but also the noise and random fluctuations - this can lead to several issues:
 
 1. Poor generalization : weak perfomances on new (unseen) data.
 2. High variance : this is linked to the point before; often we want things to be as stable as possible.
@@ -491,7 +491,7 @@ Of course, some criterias may be added or changed. Furthermore, we could add a f
 
 Through this project, we saw the process of training different machine learning model on stock prices, the impact of implementing features like BackTesting and some of their limitations (overfitting).
 
-***Keys points were :***
+***Keys points :***
 - **Importance of criterias**, as it plays a crucial role in the performance of the models.
 - **Role of BackTesting**, which is essential for evaluating a model's ability to generalize to unseen data.
 - **Model comparison**
@@ -501,5 +501,5 @@ Through this project, we saw the process of training different machine learning 
 ***Final Thoughts:***
 Predicting stock prices is a complex and uncertain task, as financial markets are influenced by a wide range of factors, many of which are impossible to quantify. While machine learning offers powerful tools for analyzing historical data and making predictions, it is important to approach such tasks with caution and recognize the limitations of these models.
 
-This project has no real financial value; it is here to give me an idea of the process of data preparation, feature engineering, model training, and evaluation, providing a foundation for further exploration and experimentation in the field of financial modeling. And as we say in France, for legal reasons : "_Les performances passées ne préjugent pas des performances futures_"
+This project is not intended for real-world financial applications; it is here to give me an idea of the process of data preparation, feature engineering, model training, and evaluation, providing a foundation for further exploration and experimentation in the field of financial modeling. And as we say in France, for legal reasons : "_Les performances passées ne préjugent pas des performances futures_"
 
