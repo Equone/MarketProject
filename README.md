@@ -7,7 +7,7 @@ This project was inspired by an article on dataset (I will update this README.md
 
 ## Project Overview
 
-- **Data Source**: The data used in this project is historical stock data for Apple Inc. (`AAPL`), sourced from Yahoo Finance.
+- **Data Source**: The data used in this project is historical stock data for Apple Inc. (`AAPL`), sourced from Yahoo Finance, but any company can be used.
 - **Objective**: To predict whether the stock price will go up the next day based on various features derived from historical data.
 - **Models**: We compare the performance of multiple machine learning models, with and without backtesting, and with varying sets of features.
 
