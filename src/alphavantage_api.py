@@ -2,7 +2,7 @@ from datetime import datetime
 import requests
 
 """
-My API Key : F1CSEY3K0H1XDJKO
+My API Key : get your API key on the alphavantage website
 """
 
 def get_days_elapsed_since_dividends(symbol, api_key):
