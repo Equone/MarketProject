@@ -58,7 +58,7 @@ If you looked at ```requirements.txt```, you should have every packages installe
 ```python
 # Load the stock data
 symbol = "AAPL"
-api_key = 'F1CSEY3K0H1XDJKO' # Key for the alphavantage API.
+api_key = 'XXXXXXXXXXXX' # Key for the alphavantage API.
 DATA_PATH = f"C:/Users/user_name/Market_Project/{symbol}_data.json"
 
 if os.path.exists(DATA_PATH):
